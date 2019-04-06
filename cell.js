@@ -7,6 +7,12 @@ class Cell {
     this.maxspeed = 8;
     this.maxforce = 0.2;
     this.size = 50;
+    this.health = 1;
+
+    this.dna = [5, -5];
+
+    //this.dna[0] = random(-5, 5);
+    //this.dna[1] = random(-5, 5);
   }
 
   update() {
@@ -16,16 +22,28 @@ class Cell {
 
     this.acceleration.mult(0);
 
-    if (this.size > 0){
-      this.size = this.size - 0.1;
+    if (this.health > 0){
+      this.health = this.health - 0.001;
+      this.size = this.health * 50;
     }
   }
 
-  eat(list){
+  decision(good, bad){
+    let steerG = this.eat(good, 1);
+    let steerB = this.eat(bad, -1);
+
+    steerG.mult(this.dna[0]);
+    steerB.mult(this.dna[1]);
+
+    this.applyForce(steerG);
+    this.applyForce(steerB);
+  }
+
+  eat(list, nutrition){
     let record = Infinity;
     let closestIndex = -1;
     for(let i = 0; i < list.length; i++){
-      let distance = this.position.dist(food[i]);
+      let distance = this.position.dist(list[i]);
       if(distance < record){
         record = distance;
         closestIndex = i;
@@ -33,14 +51,12 @@ class Cell {
     }
     if(record < this.size/2){
       list.splice(closestIndex, 1);
-      this.size = this.size + 10;
+      this.health = this.health + (0.1 * nutrition);
     }
     else if(closestIndex > -1){
-      this.seek(list[closestIndex]);
-    }else{
-      let mid = createVector(canvasSize/2, canvasSize/2);
-      this.seek(mid);
+      return(this.seek(list[closestIndex]));
     }
+    return createVector(0, 0);
   }
 
   seek(target) {
@@ -51,11 +67,15 @@ class Cell {
     let steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce);
 
-    this.applyForce(steer);
+    return(steer);
   }
 
   applyForce(force) {
     this.acceleration.add(force);
+  }
+
+  dead(){
+    return(this.health <= 0.001);
   }
 
   display() {
