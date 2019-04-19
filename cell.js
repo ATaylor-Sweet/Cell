@@ -9,7 +9,7 @@ class Cell {
     this.size = 50;
     this.health = 1;
 
-    this.dna = [5, -5];
+    this.dna = [1, -0.2];
 
     //this.dna[0] = random(-5, 5);
     //this.dna[1] = random(-5, 5);
@@ -54,9 +54,12 @@ class Cell {
       this.health = this.health + (0.1 * nutrition);
     }
     else if(closestIndex > -1){
-      return(this.seek(list[closestIndex]));
+        return(this.seek(list[closestIndex]));
     }
     return createVector(0, 0);
+  }
+
+  breed(mate){
   }
 
   seek(target) {
