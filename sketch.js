@@ -1,4 +1,4 @@
-let pop = 2;
+let pop = 10;
 let cell = [];
 let food = [];
 let foodRate = 0.1;
@@ -41,8 +41,8 @@ function draw() {
     poison.push(createVector(random(canvasSize), random(canvasSize)));
   }
 
-  for(var i = pop - 1; i >= 0; i--){
-    cell[i].decision(food, poison);
+  for(var i = cell.length - 1; i >= 0; i--){
+    cell[i].decision(food, poison, cell, i);
     cell[i].update();
     cell[i].display();
     if(cell[i].dead() === true){
