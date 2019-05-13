@@ -1,10 +1,14 @@
-let pop = 10;
+let pop = 100;
 let cell = [];
 let food = [];
-let foodRate = 0.1;
+let foodRate = 1;
 let poison = [];
-let poisonRate = 0.01;
-let canvasSize = 650;
+let poisonRate = 0.05;
+let canvasSize = 925;
+let mutateRate = 0.05;
+let mutateFrequency = 0.5;
+let breedRate = 75;
+
 
 function setup() {
   createCanvas(canvasSize, canvasSize);
@@ -17,6 +21,8 @@ function setup() {
   for(i = 0;i < poisonRate * 10; i++){
     poison.push(createVector(random(canvasSize), random(canvasSize)));
   }
+  let rSlider = createSlider(0, 255, 100);
+  rSlider.position(20, 20);
 }
 
 function draw() {
@@ -25,13 +31,13 @@ function draw() {
   noStroke();
   fill(0,255,0);
   for(let i = 0;i < food.length;i++){
-    rect(food[i].x, food[i].y, 5, 5);
+    rect(food[i].x, food[i].y, 3, 3);
   }
 
   noStroke();
   fill(255, 0, 0);
   for(let i = 0;i < poison.length;i++){
-    rect(poison[i].x, poison[i].y, 5, 5);
+    rect(poison[i].x, poison[i].y, 3, 3);
   }
 
   if(random(1) <= foodRate){

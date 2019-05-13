@@ -12,7 +12,10 @@ class Cell {
 
     //this.dna = [1, -0.1, 0.1];
     if(dna == null){
-      this.dna = [random(-5, 5), random(-5, 5), random(-5, 5)];
+      this.dna = [random(-5, 5),
+                  random(-5, 5),
+                  random(-5, 5),
+                  color(random(255), random(255), random(255))];
     }else{
      this.dna = dna;
     }
@@ -26,7 +29,7 @@ class Cell {
     this.acceleration.mult(0);
 
     if (this.health > 0){
-      this.health = this.health - 0.001;
+      this.health = this.health - 0.005;
       this.size = this.health * 50;
     }
 
@@ -34,8 +37,8 @@ class Cell {
   }
 
   decision(good, bad, population, cellPosition){
-    let steerG = this.eat(good, 0.25);
-    let steerB = this.eat(bad, -1);
+    let steerG = this.eat(good, 0.5);
+    let steerB = this.eat(bad, -5);
     let steerP = this.mate(population, cellPosition);
 
     steerG.mult(this.dna[0]);
@@ -72,9 +75,6 @@ class Cell {
     let closestIndex = -1;
     for(let i = 0; i < list.length; i++){
       if (i !== cellPosition){
-        console.log(list[i].position);
-        console.log(list);
-        console.log(i);
         let distance = this.position.dist(list[i].position);
         if(distance < record){
           record = distance;
@@ -92,8 +92,16 @@ class Cell {
   }
 
   breed(mate){
-    if (this.reproductionTimer > 500 && mate.reproductionTimer > 500){
-      let dna = [this.dna[0], mate.dna[1], this.dna[2]];
+    if (this.reproductionTimer > breedRate && mate.reproductionTimer > breedRate){
+      let dna = [this.dna[0], mate.dna[1], this.dna[2], lerpColor(this.dna[3], mate.dna[3], 0.5)];
+      if(random(0, 1) < mutateFrequency){
+          console.log(dna);
+          dna[0] = dna[0] + random(-mutateRate, mutateRate);
+          dna[1] = dna[1] + random(-mutateRate, mutateRate);
+          dna[2] = dna[2] + random(-mutateRate, mutateRate);
+          console.log(dna);
+          console.log("mutate!");
+      }
       cell.push(new Cell(this.position.x, this.position.y, dna));
       this.reproductionTimer = 0;
       mate.reproductionTimer = 0;
@@ -120,7 +128,7 @@ class Cell {
   }
 
   display() {
-    fill(127);
+    fill(this.dna[3]);
     stroke(200);
     strokeWeight(2);
     ellipse(this.position.x, this.position.y, this.size, this.size);
