@@ -94,13 +94,12 @@ class Cell {
   breed(mate){
     if (this.reproductionTimer > breedRate && mate.reproductionTimer > breedRate){
       let dna = [this.dna[0], mate.dna[1], this.dna[2], lerpColor(this.dna[3], mate.dna[3], 0.5)];
-      if(random(0, 1) < mutateFrequency){
+      if(random(0, 1) < mutateRate){
           console.log(dna);
-          dna[0] = dna[0] + random(-mutateRate, mutateRate);
-          dna[1] = dna[1] + random(-mutateRate, mutateRate);
-          dna[2] = dna[2] + random(-mutateRate, mutateRate);
-          console.log(dna);
-          console.log("mutate!");
+          dna[0] = dna[0] + random(-mutateAmount, mutateAmount);
+          dna[1] = dna[1] + random(-mutateAmount, mutateAmount);
+          dna[2] = dna[2] + random(-mutateAmount, mutateAmount);
+          dna[3] = lerpColor(dna[3], color(mutateAmount*random(0,255), mutateAmount*random(0,255), mutateAmount*random(0,255)), mutateAmount);
       }
       cell.push(new Cell(this.position.x, this.position.y, dna));
       this.reproductionTimer = 0;
